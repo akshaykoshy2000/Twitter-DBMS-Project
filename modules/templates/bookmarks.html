@@ -33,10 +33,10 @@
                 </div>
             {% endif %}
         </div>
-        <a href="{{ url_for('unsave_post',post_id=post.id) }}">
+        <a href="{{ url_for('unsave_post',post_id=post.saved_post.id) }}">
             <img src="{{ url_for('static', filename='Images/SVG/bookmark_save.svg') }}" id="imgplus" onclick="chngimg()" class="filter_white" alt="">
         </a>
-        <a href="{{ url_for('retweet',post_id=post.id) }}">
+        <a href="{{ url_for('retweet',post_id=post.saved_post.id) }}">
             <img src="{{ url_for('static', filename='Images/SVG/retweet.svg') }}" class="filter_white" alt="">
         </a>
     </div>

@@ -29,6 +29,38 @@ import matplotlib.pyplot as plt
 
 from werkzeug.wsgi import DispatcherMiddleware
 
+k=""
+
+config = {
+  'apiKey': "AIzaSyAqOXRxDJOKUan58XZXnv7wHZ62jav6gKo",
+  'authDomain': "dbd-project-48733.firebaseapp.com",
+  'projectId': "dbd-project-48733",
+  'databaseURL':"https://dbd-project-48733-default-rtdb.europe-west1.firebasedatabase.app/",
+  'storageBucket': "dbd-project-48733.appspot.com",
+  'messagingSenderId': "599766163003",
+  'appId': "1:599766163003:web:7deb49a214969bebbcc61e",
+  'measurementId': "G-DW075HEN5F"
+}
+#initialize firebase
+firebase = pyrebase.initialize_app(config)
+auth = firebase.auth()
+db = firebase.database()
+
+
+#Tweepy api for Whatsapp bot
+
+CONSUMER_KEY = 'enUKRffwxqZW6aoJDuIkku9xN'
+CONSUMER_SECRET = 'eSg94gDpNcZLxTkSqJiS2dGP9jwK9cHS0XZ2W9NAxVeoDRRU89'
+ACCESS_TOKEN = '1372516587232653312-ebg0MzRW8D1aYvshsCUA1ZTflFHowJ'
+ACCESS_TOKEN_SECRET = 'sLIQpz5BScPklOeqK14YuxKwP3MhKQ9NR4TjakgWAINlU'
+# create OAuthHandler object
+auth1 = tweepy.OAuthHandler(CONSUMER_KEY, CONSUMER_SECRET)
+# set access token and secret
+auth1.set_access_token(ACCESS_TOKEN, ACCESS_TOKEN_SECRET)
+# create tweepy API object to fetch tweets
+api = tweepy.API(auth1)
+
+
 
 #===================================================================================================================
 #===================================================================================================================
@@ -205,9 +237,11 @@ def dashboard():
         currentTime = str(x.strftime("%d")) +" "+ str(x.strftime("%B")) +"'"+ str(x.strftime("%y")) + " "+ str(x.strftime("%I")) +":"+ str(x.strftime("%M")) +" "+ str(x.strftime("%p"))
 
         if user_tweet.tweet_img.data:
+            print("YES")
             tweet_img = save_tweet_picture(user_tweet.tweet_img.data)
             post = Post(tweet=user_tweet.tweet.data, stamp=currentTime, author=current_user, post_img=tweet_img)
         else:
+            print("NO")
             post = Post(tweet=user_tweet.tweet.data, stamp=currentTime, author=current_user)
 
         db.session.add(post)
@@ -273,6 +307,8 @@ def unsave_post(post_id):
     #     .first()
     # print(removed_post.type())
     # db.session.delete(removed_post)
+    exists = db.session.query(Bookmark.post_id).all() 
+    print(exists)
     obj=db.session.query(Bookmark).filter(Bookmark.post_id==post_id).first()
     print(obj)
     db.session.delete(obj)
@@ -444,7 +480,7 @@ def plotPieChart(positive, wpositive, spositive, negative, wnegative, snegative,
         # dateTimeObj = datetime.now()
         # x=str(dateTimeObj.year)+'_'+str(dateTimeObj.month)+'_'+str(dateTimeObj.day)+'_'+str(dateTimeObj.hour)+'_'+str(dateTimeObj.minute)+'_'+str(dateTimeObj.second)+'_'+str(dateTimeObj.microsecond)
         # x="".join(x.split())
-        strFile = r"C:\Users\ADMIN\Downloads\real-time-sentiment-tracking-with-twitter-master\real-time-sentiment-tracking-with-twitter-master\static\plot1.png"#.format(x)
+        strFile = r"C:\Users\ADMIN\Downloads\Twitter-DBD-Project\Twitter-DBD -Project\modules\static\Images\plot1.png"#.format(x)
         #global fname
         #fname=strFile
         
@@ -583,12 +619,12 @@ def bot():
         s+='\n\n Distribution of tweets \n *Positive* [' + str(positive) + '%]\n*Weakly Positive* [' + str(wpositive) + '%]\n*Strongly Positive* [' + str(spositive) +'%]\n*Neutral* [' + str(neutral) + '%]\n*Negative* [' + str(negative) +'%]\n*Weakly Negative* [' + str(wnegative) + '%]\n*Strongly Negative* [' + str(snegative) + '%]'
         print("Test 2")
         plotPieChart(positive, wpositive, spositive, negative,wnegative, snegative, neutral,k, tweets)
-        strFile = "C:\\Users\\ADMIN\\Downloads\\real-time-sentiment-tracking-with-twitter-master\\real-time-sentiment-tracking-with-twitter-master\\static\\plot1.png"
+        strFile = "C:\\Users\\ADMIN\\Downloads\\Twitter-DBD-Project\\Twitter-DBD -Project\\modules\\static\\Images\\plot1.png"
         print("Test 3")
         #strFile=fname
         storage=firebase.storage()
         storage.child(strFile).put(strFile)
-        url=storage.child(strFile).get_url(person['uid'])
+        url=storage.child(strFile).get_url('AGO19xIHVTcFKZzmmNyLbBfV26C2')
         #print(url)
         msg.media(url)
         msg.body(s)
