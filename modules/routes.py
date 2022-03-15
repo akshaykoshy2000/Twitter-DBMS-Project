@@ -44,7 +44,7 @@ config = {
 #initialize firebase
 firebase = pyrebase.initialize_app(config)
 auth = firebase.auth()
-db = firebase.database()
+db1 = firebase.database()
 
 
 #Tweepy api for Whatsapp bot
@@ -81,8 +81,8 @@ def home():
     form_sign = Signup()
     form_login = Login()
 
-    if form_sign.validate_on_submit():
-
+    if form_sign.signup.data and form_sign.validate_on_submit():
+        print("hellosignup")
         hashed_password = generate_password_hash(form_sign.password.data, method='sha256')
         x = datetime.datetime.now()
         creation = str(x.strftime("%B")) +" "+ str(x.strftime("%Y")) 
@@ -91,7 +91,13 @@ def home():
         db.session.commit()
         return render_template('sign.html')
 
-    if form_login.validate_on_submit():
+    if form_login.login.data and form_login.validate_on_submit():
+        print("hellologin")
+        
+        # print(form_sign.username.data)
+        # print(form_sign.email.data)
+        # print(form_login.username.data)
+        # print(form_login.password.data)
         user_info = User_mgmt.query.filter_by(username=form_login.username.data).first()
         if user_info:
             if check_password_hash(user_info.password, form_login.password.data):

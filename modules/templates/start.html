@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Twitter</title>
+    <title>Twitter DBMS</title>
     <link rel="stylesheet" href="{{ url_for('static',filename='css/start.css') }}">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.1/css/bootstrap.min.css" integrity="sha384-VCmXjywReHh4PwowAiWNagnWcLhlEJLA5buUprzK8rxFgeH0kww/aWY76TfkUoSX" crossorigin="anonymous">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
@@ -28,11 +28,37 @@
             <p style="margin-left: 150px;">Join Twitter today</p>
             <form action="{{ url_for('home') }}" class="form-group" style="margin-left: 150px;" method="post">
                 {{form1.csrf_token}}
+
                 {{form1.username(class='form_control',placeholder='Username')}}
+                {% for errors in form1.username.errors %}
+                <small class="form-text text-muted " style="color:red">
+                {{ ''.join(errors) }}
+                </small>
+                {% endfor %}
+
                 {{form1.email(class='form_control',placeholder='Email')}}
+                {% for errors in form1.email.errors %}
+                <small class="form-text text-muted " style="color:red">
+                {{ ''.join(errors) }}
+                </small>
+                {% endfor %}
+
                 {{form1.password(class='form_control',placeholder='Password')}} <br>
+                {% for errors in form1.password.errors %}
+                <small class="form-text text-muted " style="color:red">
+                {{ ''.join(errors) }}
+                </small>
+                {% endfor %}
+                
+                <!-- {% for field, errors in form1.errors.items() %}
+                <small class="form-text text-muted " style="color:red">
+                {{ ', '.join(errors) }}
+                </small>
+                   {% endfor %} -->
+
                 {{form1.signup(class='form_signup')}}
             </form>
+           
             <p style="margin-left: 150px;">Already have an account? 
                 <button type="button" class="btn btn-info btn-lg" class="login" style="background: none; font-weight: bold; font-size: 17px; color: dodgerblue; border: none; padding: 0px 4px;" data-toggle="modal" data-target="#myModal">Login</button>
             </p>
