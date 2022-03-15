@@ -5,7 +5,7 @@ from dash import Dash
 from modules.app1 import app1
 from werkzeug.wsgi import DispatcherMiddleware
 from werkzeug.serving import run_simple
-from dash import html
+import dash_html_components as html
 import pyrebase
 from twilio.twiml.messaging_response import MessagingResponse
 from textblob import TextBlob

@@ -37,6 +37,9 @@ from werkzeug.wsgi import DispatcherMiddleware
 
 @app.route('/')
 @app.route('/home',methods=['GET','POST'])
+
+
+
 def home():
 
     # add this to those routes which you want the user from going to if he/she is already logged in
@@ -250,19 +253,30 @@ def viewProfile(account_id):
 
 @app.route('/bookmark/<int:post_id>',methods=['GET','POST'])
 def save_post(post_id):
-    saved_post = Bookmark(post_id=post_id,user_id=current_user.id)
-    db.session.add(saved_post)
-    db.session.commit()
-    flash('Saved tweet to bookmark!','success')
+    #print("hello")
+    exists = db.session.query(Bookmark).filter_by(post_id=post_id).first() is None
+    print(exists)
+    #print("hello1")
+    if exists:
+        #print("hello2")
+        saved_post = Bookmark(post_id=post_id,user_id=current_user.id)
+        db.session.add(saved_post)
+        db.session.commit()
+        flash('Saved tweet to bookmark!','success')
     return redirect(url_for('dashboard'))
 
 
 @app.route('/unsaved_posts/<int:post_id>',methods=['GET','POST'])
 def unsave_post(post_id):
-    removed_post = Bookmark.query\
-        .filter_by(post_id=post_id)\
-        .first()
-    db.session.delete(removed_post)
+    # removed_post = Bookmark.query\
+    #     .filter_by(post_id=post_id)\
+    #     .first()
+    # print(removed_post.type())
+    # db.session.delete(removed_post)
+    obj=db.session.query(Bookmark).filter(Bookmark.post_id==post_id).first()
+    print(obj)
+    db.session.delete(obj)
+    
     db.session.commit()
     flash('Post removed from bookmark!','success')
     return redirect(url_for('dashboard'))
